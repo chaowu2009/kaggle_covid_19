@@ -56,18 +56,22 @@ def plot_data(data=data):
 case_threshold = 500
 
 def plot_state_data(state="Maryland"):
+    
+    print("analyzing state: ", state)
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(14,11))
 
     ax_1 = fig.add_subplot(211)
 
     legend_list = []
 
+    df_by_state = df[df['state'] == state]
+
     for county in all_county:
 
-        data = df[(df['county'] == county) & (df['state'] == state)]
+        data = df_by_state[df_by_state['county'] == county]
         if not data.empty:
-            print(data.iloc[-1])
+            #print(data.iloc[-1])
 
             if data.iloc[-1]['cases'] > case_threshold:
 
@@ -89,11 +93,13 @@ def plot_state_data(state="Maryland"):
     ax_2 = fig.add_subplot(212)
     legend_list = []
 
+    df_by_state = df[df['state'] == state]
+
     for county in all_county:
 
-        data = df[(df['county'] == county) & (df['state'] == state)]
+        data = df_by_state[df_by_state['county'] == county]
         if not data.empty:
-            print(data.iloc[-1])
+            #print(data.iloc[-1])
 
             if data.iloc[-1]['cases'] > case_threshold:
 
@@ -135,7 +141,9 @@ def plot_state_data(state="Maryland"):
     ax_2.set_ylabel('smoothed increase rate')
     ax_2.set_title('increase rate')
 
-    plt.show()
+    plt.savefig("result/case_trend_in_" + state + ".png", dpi=300)
+    #plt.show()
+    
 
 
 if __name__ == "__main__":
@@ -143,5 +151,6 @@ if __name__ == "__main__":
     #plot_data()
         
     #plot_state_data()
-
-    plot_state_data("Virginia")
+    
+    for state in all_state:
+        plot_state_data(state)
