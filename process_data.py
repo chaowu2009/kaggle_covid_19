@@ -139,11 +139,13 @@ def plot_state_data(state="Maryland"):
     ax_2.grid(True)
     ax_2.set_xlabel('date')
     ax_2.set_ylabel('smoothed increase rate')
-    ax_2.set_title('increase rate')
+    ax_2.set_ylim([0,50])
+    ax_2.set_title('increase rate at state: ' + state)
 
+    plt.tight_layout()
     plt.savefig("result/case_trend_in_" + state + ".png", dpi=300)
     #plt.show()
-    
+    plt.close()
 
 
 if __name__ == "__main__":
