@@ -43,7 +43,7 @@ def plot_data(data=data):
 
     #ax.fmt_xdata = mdates.DateFormatter('%Y-%m-%d')
 
-    myFmt = mdates.DateFormatter('%Y-%m-%d')
+    myFmt = mdates.DateFormatter('%m-%d')
     ax.xaxis.set_major_formatter(myFmt)
 
     fig.autofmt_xdate()
@@ -52,6 +52,8 @@ def plot_data(data=data):
     plt.title("County Level Change")
     plt.show()
 
+
+case_threshold = 500
 
 def plot_state_data(state="Maryland"):
 
@@ -67,7 +69,7 @@ def plot_state_data(state="Maryland"):
         if not data.empty:
             print(data.iloc[-1])
 
-            if data.iloc[-1]['cases'] > 500:
+            if data.iloc[-1]['cases'] > case_threshold:
 
                 ax_1.plot(data['date'], data['cases'], 'o-')
 
@@ -83,7 +85,6 @@ def plot_state_data(state="Maryland"):
     ax_1.set_xlabel('date')
     ax_1.set_ylabel('case number')
     ax_1.set_title("cases by county over time")
-    # plt.show()
 
     ax_2 = fig.add_subplot(212)
     legend_list = []
@@ -94,16 +95,18 @@ def plot_state_data(state="Maryland"):
         if not data.empty:
             print(data.iloc[-1])
 
-            if data.iloc[-1]['cases'] > 500:
+            if data.iloc[-1]['cases'] > case_threshold:
 
                 case_number = data['cases']
-                #case_number = smooth_list(case_number)
+                case_number = smooth_list(case_number)
 
                 rate = np.diff(case_number)/(case_number[1:])*100
 
                 ax_2.plot(data['date'][1:], rate, 'o-')
 
-                myFmt = mdates.DateFormatter('%Y-%m-%d')
+                #myFmt = mdates.DateFormatter('%Y-%m-%d')
+                myFmt = mdates.DateFormatter('%m-%d')
+
                 ax_2.xaxis.set_major_formatter(myFmt)
 
                 legend_list.append(data.iloc[-1]['county'])
@@ -116,13 +119,13 @@ def plot_state_data(state="Maryland"):
     grouped_df = md_data.groupby(['state', 'date']).sum().reset_index()
 
     case_number = grouped_df['cases']
-    #case_number = smooth_list(case_number)
+    case_number = smooth_list(case_number)
 
     rate = np.diff(case_number)/(case_number[1:])*100
 
     ax_2.plot(grouped_df['date'][1:], rate, '*-')
 
-    myFmt = mdates.DateFormatter('%Y-%m-%d')
+    myFmt = mdates.DateFormatter('%m-%d')
     ax_2.xaxis.set_major_formatter(myFmt)
     fig.autofmt_xdate()
 
@@ -136,6 +139,9 @@ def plot_state_data(state="Maryland"):
 
 
 if __name__ == "__main__":
-    plot_state_data()
+    
+    #plot_data()
+        
+    #plot_state_data()
 
-    #plot_state_data("Virigia")
+    plot_state_data("Virginia")
